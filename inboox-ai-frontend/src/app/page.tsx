@@ -11,7 +11,7 @@ export default function Home() {
       <Hero />
       <Features />
       <HowItWorks />
-      
+
       {/* Testimonials (Simplified for now) */}
       <section className="py-24 bg-surface-light/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,6 +43,40 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
+            <p className="text-foreground/60">Choose the plan that fits your needs.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "Free", price: "$0", features: ["5 AI generations/month", "Standard support", "Basic tones"] },
+              { name: "Pro", price: "$19", features: ["Unlimited AI generations", "Priority support", "All tones & custom tones", "History tracking"], popular: true },
+              { name: "Enterprise", price: "Custom", features: ["Custom AI training", "Dedicated account manager", "API access", "SSO & Security"] }
+            ].map((plan) => (
+              <div key={plan.name} className={`p-8 rounded-3xl border flex flex-col ${plan.popular ? 'border-primary ring-2 ring-primary/20 shadow-2xl' : 'border-border bg-surface'}`}>
+                <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                <div className="text-4xl font-bold mb-4">{plan.price}<span className="text-sm font-normal text-foreground/40">{plan.price !== "Custom" && "/mo"}</span></div>
+                <ul className="space-y-4 mb-8 flex-1">
+                  {plan.features.map(f => (
+                    <li key={f} className="flex items-center space-x-3 text-sm text-foreground/70">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button className={`w-full py-4 rounded-xl font-bold transition-all ${plan.popular ? 'bg-ai-gradient text-white' : 'bg-surface-light hover:bg-border'}`}>
+                  Get Started
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
 
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
