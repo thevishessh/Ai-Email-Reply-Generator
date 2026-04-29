@@ -42,3 +42,5 @@ next-env.d.ts
 inboox-ai-backend/target/
 inboox-ai-backend/.idea/
 inboox-ai-backend/*.iml
+inboox-ai-backend/data/
+
