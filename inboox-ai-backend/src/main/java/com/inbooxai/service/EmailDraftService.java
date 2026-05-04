@@ -37,6 +37,8 @@ public class EmailDraftService {
     public String generateReply(GenerationRequest request) {
         String prompt = "Generate a " + request.getTone() + " email reply for the following content:\n\n" + request.getEmailContent() + "\n\nReply:";
         
+        System.out.println("Generating reply for tone: " + request.getTone());
+        
         try {
             Map<String, Object> body = Map.of(
                 "model", "llama-3.3-70b-versatile",
@@ -52,6 +54,10 @@ public class EmailDraftService {
                     .retrieve()
                     .body(Map.class);
 
+            if (response == null || !response.containsKey("choices")) {
+                throw new RuntimeException("Empty or invalid response from Groq API");
+            }
+
             List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
             Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
             String reply = (String) message.get("content");
@@ -59,10 +65,15 @@ public class EmailDraftService {
             saveDraft(request.getEmailContent(), reply, request.getTone());
             return reply;
         } catch (Exception e) {
+            System.err.println("ERROR: Failed to generate reply via Groq: " + e.getMessage());
             e.printStackTrace();
-            // Fallback
+            // Fallback response so the user isn't stuck
             String reply = "Thank you for your message. I am currently unavailable but will get back to you soon.";
-            saveDraft(request.getEmailContent(), reply, request.getTone());
+            try {
+                saveDraft(request.getEmailContent(), reply, request.getTone());
+            } catch (Exception saveEx) {
+                System.err.println("WARNING: Could not save fallback draft: " + saveEx.getMessage());
+            }
             return reply;
         }
     }

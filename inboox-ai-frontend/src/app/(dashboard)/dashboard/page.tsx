@@ -2,11 +2,11 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Send, 
-  Copy, 
-  RefreshCw, 
-  Sparkles, 
+import {
+  Send,
+  Copy,
+  RefreshCw,
+  Sparkles,
   MessageSquareQuote,
   Zap,
   Check
@@ -49,16 +49,16 @@ function DashboardContent() {
 
   const handleGenerate = async () => {
     if (!inputEmail) return;
-    
+
     setIsGenerating(true);
     setGeneratedReply("");
     setError("");
     setIsSent(false);
-    
+
     try {
-      const response = await api.post("/emails/generate", { 
-        emailContent: inputEmail, 
-        tone: selectedTone 
+      const response = await api.post("/emails/generate", {
+        emailContent: inputEmail,
+        tone: selectedTone
       });
       setGeneratedReply(response.data);
     } catch (err: any) {
@@ -77,14 +77,14 @@ function DashboardContent() {
 
   const handleSendDraft = () => {
     if (!generatedReply) return;
-    
+
     // Copy to clipboard
     navigator.clipboard.writeText(generatedReply);
-    
+
     // Open default email client with the content
     const mailtoUrl = `mailto:?body=${encodeURIComponent(generatedReply)}`;
     window.location.href = mailtoUrl;
-    
+
     setIsSent(true);
     setIsCopied(true);
     setTimeout(() => {
@@ -125,8 +125,8 @@ function DashboardContent() {
                   onClick={() => setSelectedTone(tone.id)}
                   className={cn(
                     "flex flex-col items-center justify-center p-3 rounded-xl border transition-all",
-                    selectedTone === tone.id 
-                      ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/10" 
+                    selectedTone === tone.id
+                      ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/10"
                       : "bg-surface-light border-border text-foreground/60 hover:border-primary/50"
                   )}
                 >
@@ -154,7 +154,7 @@ function DashboardContent() {
               </>
             )}
           </button>
-          
+
           {error && (
             <p className="text-red-500 text-sm text-center">{error}</p>
           )}
@@ -190,14 +190,14 @@ function DashboardContent() {
                     <span className="font-bold">AI Generated Response</span>
                   </div>
                   <div className="flex space-x-2">
-                    <button 
+                    <button
                       onClick={handleCopy}
                       className="p-2 rounded-lg bg-surface-light hover:bg-border transition-colors text-foreground/60"
                       title="Copy to clipboard"
                     >
                       {isCopied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                     </button>
-                    <button 
+                    <button
                       onClick={handleGenerate}
                       className="p-2 rounded-lg bg-surface-light hover:bg-border transition-colors text-foreground/60"
                       title="Regenerate"
@@ -227,7 +227,7 @@ function DashboardContent() {
 
                 {!isGenerating && generatedReply && (
                   <div className="absolute bottom-6 right-6 z-50">
-                    <button 
+                    <button
                       onClick={handleSendDraft}
                       className={cn(
                         "px-6 py-2 rounded-lg text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer",
