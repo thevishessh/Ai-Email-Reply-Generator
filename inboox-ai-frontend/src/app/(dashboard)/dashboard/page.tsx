@@ -38,6 +38,8 @@ function DashboardContent() {
   const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState("");
 
+  const [isSent, setIsSent] = useState(false);
+
   useEffect(() => {
     const templateId = searchParams.get("templateId");
     if (templateId && templateContents[templateId]) {
@@ -51,6 +53,7 @@ function DashboardContent() {
     setIsGenerating(true);
     setGeneratedReply("");
     setError("");
+    setIsSent(false);
     
     try {
       const response = await api.post("/emails/generate", { 
@@ -70,6 +73,17 @@ function DashboardContent() {
     navigator.clipboard.writeText(generatedReply);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const handleSendDraft = () => {
+    if (!generatedReply) return;
+    navigator.clipboard.writeText(generatedReply);
+    setIsSent(true);
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+      setIsSent(false);
+    }, 3000);
   };
 
   return (
@@ -186,7 +200,7 @@ function DashboardContent() {
                   </div>
                 </div>
 
-                <div className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap text-sm">
+                <div className="flex-1 min-h-[300px] flex flex-col">
                   {isGenerating ? (
                     <div className="space-y-4">
                       <div className="h-4 bg-surface-light rounded w-3/4 animate-pulse"></div>
@@ -195,15 +209,35 @@ function DashboardContent() {
                       <div className="h-4 bg-surface-light rounded w-1/2 animate-pulse"></div>
                     </div>
                   ) : (
-                    generatedReply
+                    <textarea
+                      value={generatedReply}
+                      onChange={(e) => setGeneratedReply(e.target.value)}
+                      className="w-full h-full min-h-[350px] bg-transparent border-none focus:outline-none text-foreground/90 font-sans leading-relaxed resize-none text-sm"
+                      placeholder="AI will generate your reply here..."
+                    />
                   )}
                 </div>
 
                 {!isGenerating && generatedReply && (
                   <div className="absolute bottom-6 right-6">
-                    <button className="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold flex items-center space-x-2 hover:bg-primary/90 transition-all">
-                      <Send className="w-4 h-4" />
-                      <span>Send Draft</span>
+                    <button 
+                      onClick={handleSendDraft}
+                      className={cn(
+                        "px-6 py-2 rounded-lg text-sm font-bold flex items-center space-x-2 transition-all",
+                        isSent ? "bg-green-500 text-white" : "bg-primary text-white hover:bg-primary/90"
+                      )}
+                    >
+                      {isSent ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          <span>Draft Sent!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          <span>Send Draft</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 )}
@@ -211,6 +245,7 @@ function DashboardContent() {
             )}
           </AnimatePresence>
         </div>
+
       </div>
     </div>
   );
