@@ -66,6 +66,7 @@ public class User implements UserDetails {
     }
 
     public User() {
+        this.role = "USER";
         this.currentPlan = "Free Starter";
         this.totalCredits = 50;
         this.usedCredits = 0;
@@ -79,7 +80,9 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.role = role;
+        if (role != null && !role.isEmpty()) {
+            this.role = role;
+        }
     }
 
     public static UserBuilder builder() {
@@ -133,8 +136,8 @@ public class User implements UserDetails {
             user.setResponseLength(responseLength);
             user.setTwoFactorEnabled(twoFactorEnabled);
             if (settings != null) user.setSettings(settings);
-            user.setCurrentPlan(currentPlan);
-            user.setTotalCredits(totalCredits);
+            if (currentPlan != null) user.setCurrentPlan(currentPlan);
+            if (totalCredits > 0) user.setTotalCredits(totalCredits);
             user.setUsedCredits(usedCredits);
             return user;
         }
@@ -143,7 +146,8 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        String authority = (role == null || role.isEmpty()) ? "USER" : role;
+        return List.of(new SimpleGrantedAuthority(authority));
     }
 
 
