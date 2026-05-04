@@ -77,7 +77,14 @@ function DashboardContent() {
 
   const handleSendDraft = () => {
     if (!generatedReply) return;
+    
+    // Copy to clipboard
     navigator.clipboard.writeText(generatedReply);
+    
+    // Open default email client with the content
+    const mailtoUrl = `mailto:?body=${encodeURIComponent(generatedReply)}`;
+    window.location.href = mailtoUrl;
+    
     setIsSent(true);
     setIsCopied(true);
     setTimeout(() => {
@@ -219,11 +226,11 @@ function DashboardContent() {
                 </div>
 
                 {!isGenerating && generatedReply && (
-                  <div className="absolute bottom-6 right-6">
+                  <div className="absolute bottom-6 right-6 z-50">
                     <button 
                       onClick={handleSendDraft}
                       className={cn(
-                        "px-6 py-2 rounded-lg text-sm font-bold flex items-center space-x-2 transition-all",
+                        "px-6 py-2 rounded-lg text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer",
                         isSent ? "bg-green-500 text-white" : "bg-primary text-white hover:bg-primary/90"
                       )}
                     >
