@@ -69,12 +69,10 @@ public class EmailDraftService {
 
     private void saveDraft(String original, String generated, String tone) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) return;
+        if (auth == null || !(auth.getPrincipal() instanceof User)) return;
         
-        String email = auth.getName();
-        User user = userRepository.findFirstByEmail(email).orElseThrow();
+        User user = (User) auth.getPrincipal();
 
-        
         EmailDraft draft = EmailDraft.builder()
                 .content(generated)
                 .tone(tone)
@@ -86,9 +84,11 @@ public class EmailDraftService {
     }
 
     public List<EmailDraft> getHistory() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findFirstByEmail(email).orElseThrow();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof User)) {
+            return List.of();
+        }
+        User user = (User) auth.getPrincipal();
         return repository.findByUser(user);
-
     }
 }

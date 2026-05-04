@@ -39,12 +39,7 @@ public class AuthService {
             System.err.println("CRITICAL: Failed to save user to MongoDB: " + e.getMessage());
             throw new RuntimeException("Database connection failed. Please check if your IP is whitelisted in MongoDB Atlas.");
         }
-        var userDetails = org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .authorities("USER")
-                .build();
-        var jwtToken = jwtService.generateToken(userDetails);
+        var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .email(user.getEmail())
@@ -55,19 +50,14 @@ public class AuthService {
 
 
     public AuthResponse authenticate(AuthRequest request) {
-        authenticationManager.authenticate(
+        var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
-        var user = repository.findFirstByEmail(request.getEmail())
-                .orElseThrow();
-        var userDetails = org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .build();
-        var jwtToken = jwtService.generateToken(userDetails);
+        var user = (User) auth.getPrincipal();
+        var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .email(user.getEmail())
