@@ -1,4 +1,4 @@
-# 📧 Email AI — Smart Email Reply Generator
+# 📧 Inboox AI — Smart Email Reply Generator
 
 > Generate professional email replies instantly using Groq AI.  
 > Built with Next.js + Java Spring Boot + MongoDB Atlas.
@@ -39,9 +39,9 @@
 ## 📁 Project Structure
 
 ```
-email-ai/
-├── email-ai-backend/               ← Spring Boot backend
-│   ├── src/main/java/com/emailai/
+InbooxAi/
+├── inboox-ai-backend/               ← Spring Boot backend
+│   ├── src/main/java/com/inbooxai/
 │   │   ├── controller/             ← REST API endpoints
 │   │   ├── service/                ← Business logic + Groq API calls
 │   │   ├── model/                  ← MongoDB Documents (User, EmailReply)
@@ -51,7 +51,7 @@ email-ai/
 │   └── src/main/resources/
 │       └── application.properties
 │
-├── email-ai-frontend/              ← Next.js frontend
+├── inboox-ai-frontend/              ← Next.js frontend
 │   ├── app/
 │   │   ├── page.jsx                ← HomePage
 │   │   ├── history/page.jsx        ← HistoryPage
@@ -114,8 +114,8 @@ Make sure you have these installed:
 ### Step 1 — Clone the repo
 
 ```bash
-git clone https://github.com/your-username/email-ai.git
-cd email-ai
+git clone https://github.com/thevishessh/Ai-Email-Reply-Generator.git
+cd InbooxAi
 ```
 
 ### Step 2 — Set Backend Environment Variables
@@ -140,7 +140,7 @@ export JWT_SECRET=myEmailAiSuperSecretKey2025XYZ
 
 ### Step 3 — Set Frontend Environment Variables
 
-Create `email-ai-frontend/.env.local`:
+Create `inboox-ai-frontend/.env.local`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080
 ```
@@ -148,7 +148,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
 ### Step 4 — Run the Backend
 
 ```bash
-cd email-ai-backend
+cd inboox-ai-backend
 mvn spring-boot:run
 ```
 
@@ -159,7 +159,7 @@ Backend starts at: `http://localhost:8080`
 Open a new terminal:
 
 ```bash
-cd email-ai-frontend
+cd inboox-ai-frontend
 npm install
 npm run dev
 ```
