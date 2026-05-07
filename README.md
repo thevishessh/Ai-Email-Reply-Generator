@@ -114,7 +114,7 @@ Make sure you have these installed:
 ### Step 1 — Clone the repo
 
 ```bash
-git clone https://github.com/thevishessh/Ai-Email-Reply-Generator.git
+git clone https://github.com/thevishessh/Inboox-AI.git
 cd InbooxAi
 ```
 
